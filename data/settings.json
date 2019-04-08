@@ -1,0 +1,15 @@
+{
+  "current_track_file": "track_a.json",
+  "event_name": "SpooperDupper Race 2019",
+  "session_name": "Q1",
+  "race_mode_settings": {
+    "countdown_mode": "laps",
+    "laps": 100,
+    "minutes": 20,
+    "triggers": {
+      "speed": false,
+      "one_beacon": false,
+      "two_beacon": false
+    }
+  }
+}
