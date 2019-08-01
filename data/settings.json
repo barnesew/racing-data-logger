@@ -11,5 +11,11 @@
       "one_beacon": false,
       "two_beacon": false
     }
+  },
+  "dev_settings": {
+    "environment_settings": {
+      "output_folder": "./data/output",
+      "tracks_folder": "./data/tracks"
+    }
   }
 }
