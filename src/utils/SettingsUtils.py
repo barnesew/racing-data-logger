@@ -1,6 +1,6 @@
 from copy import copy
 
-from . import FileUtils
+from src.utils import FileUtils
 
 settings = FileUtils.load_json_from_file("./data/settings.json")
 
@@ -13,4 +13,4 @@ def get(*argv):
             temp_settings = temp_settings[setting]
         else:
             return None
-    return settings
+    return temp_settings
