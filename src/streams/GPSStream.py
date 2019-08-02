@@ -2,7 +2,7 @@ import queue
 import threading
 import time
 
-from ..objects.GpsData import GpsData
+from ..structures.GpsData import GpsData
 
 
 class GpsWorker (threading.Thread):

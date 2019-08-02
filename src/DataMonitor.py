@@ -1,8 +1,8 @@
 import queue
 
-from src.workers.CanWorker import CanWorker
-from src.workers.GpsWorker import GpsWorker
-from src.workers.RasWorker import RasWorker
+from src.streams.CANStream import CanWorker
+from src.streams.GPSStream import GpsWorker
+from src.streams.RasStream import RasWorker
 
 
 class DataMonitor:

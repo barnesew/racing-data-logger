@@ -3,6 +3,15 @@ from ..utils import TimeUtils
 
 class GpsData:
 
+    """
+    lat
+    lon
+    alt
+    speed
+    climb
+    heading
+    """
+
     def __init__(self, timestamp=None, lat=None, lon=None, alt=None, speed=None, climb=None, satellites=None):
         if timestamp is None:
             timestamp = TimeUtils.get_precise_timestamp()
