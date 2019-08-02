@@ -1,8 +1,9 @@
-from src import RaceLogger
+from src.RaceLogger import RaceLogger
 
 
 def main():
-    RaceLogger.launch()
+    race_logger = RaceLogger()
+    race_logger.start()
 
 
 if __name__ == "__main__":

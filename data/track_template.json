@@ -1,21 +1,7 @@
 {
   "name": "Track Name Here",
-  "start_line": [
-    {
-      "lat": 0,
-      "lon": 0
-    },
-    {
-      "lat": 0,
-      "lon": 0
-    },
-    {
-      "lat": 0,
-      "lon": 0
-    },
-    {
-      "lat": 0,
-      "lon": 0
-    }
-  ]
+  "start_line": {
+    "first_coordinate": [39.136745, -84.514620],
+    "second_coordinate": [39.133683, -84.515136]
+  }
 }
