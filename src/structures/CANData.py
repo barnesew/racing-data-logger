@@ -18,3 +18,21 @@ class CANData:
         self.battery_voltage: float = battery_voltage
         self.fuel_pressure: float = fuel_pressure
         self.oil_pressure: float = oil_pressure
+
+    @staticmethod
+    def get_csv_header():
+        return "Engine Speed, Throttle Position, Coolant Temp, Oil Temp, Intake Air Temp, " \
+               "MAP Sensor, Battery Voltage, Fuel Pressure, Oil Pressure"
+
+    def get_can_as_csv(self):
+        return "{}, {}, {}, {}, {}, {}, {}, {}, {}".format(
+            self.engine_speed,
+            self.throttle_position,
+            self.coolant_temp,
+            self.oil_temp,
+            self.intake_air_temp,
+            self.map_sensor,
+            self.battery_voltage,
+            self.fuel_pressure,
+            self.oil_pressure
+        )

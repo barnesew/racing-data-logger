@@ -215,3 +215,6 @@ dmypy.json
 .pyre/
 
 # End of https://www.gitignore.io/api/python,pycharm+all
+
+# Ignore Output Folder
+data/output

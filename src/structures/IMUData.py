@@ -17,3 +17,14 @@ class IMUData:
         self.roll = roll
         self.pitch = pitch
         self.yaw = yaw
+
+    @staticmethod
+    def get_csv_header():
+        return "Accelerometer X, Accelerometer Y, Accelerometer Z, Gyro X, Gyro Y, Gyro Z, Roll, Pitch, Yaw"
+
+    def get_imu_as_csv(self):
+        return "{}, {}, {}, {}, {}, {}, {}, {}, {}". format(
+            self.accel_x, self.accel_y, self.accel_z,
+            self.gyro_x, self.gyro_y, self.gyro_z,
+            self.roll, self.pitch, self.yaw
+        )

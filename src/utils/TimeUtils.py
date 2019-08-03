@@ -6,6 +6,10 @@ def get_formatted_timestamp():
     return time.strftime("%y-%m-%d %H:%d:%S %Z", time.gmtime())
 
 
+def get_log_name_timestamp():
+    return time.strftime("%y_%m_%d_%H_%d_%S", time.gmtime())
+
+
 def get_precise_timestamp():
     # Returns high-precision timestamp in seconds
     return time.time_ns() / (10 ** 9)

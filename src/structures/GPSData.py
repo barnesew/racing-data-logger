@@ -24,5 +24,20 @@ class GPSData:
     def get_coordinate_as_tuple(self) -> (float, float):
         return self.lat, self.lon
 
+    @staticmethod
+    def get_csv_header():
+        return "Timestamp, Latitude, Longitude, Altitude, Speed, Climb, Heading"
+
+    def get_gps_as_csv(self):
+        return "{}, {}, {}, {}, {}, {}, {}". format(
+            self.timestamp,
+            self.lat,
+            self.lon,
+            self.alt,
+            self.speed,
+            self.climb,
+            self.heading
+        )
+
     def __str__(self):
         return "(" + str(self.lat) + ", " + str(self.lon) + ")"
