@@ -3,6 +3,10 @@ from geopy.distance import distance
 from src.structures.GPSData import GPSData
 
 
+def meters_distance_between(gps_a: GPSData, gps_b: GPSData) -> float:
+    return distance(gps_a.get_coordinate_as_tuple(), gps_b.get_coordinate_as_tuple()).meters
+
+
 def did_driver_cross_start_line(driver_gps_a: GPSData, driver_gps_b: GPSData,
                                 start_line_a: GPSData, start_line_b: GPSData) -> (bool, GPSData):
 
@@ -33,8 +37,8 @@ def did_driver_cross_start_line(driver_gps_a: GPSData, driver_gps_b: GPSData,
 
     gps_result = GPSData(lat=driver_gps_a.lat + (t * gps_s1.lat), lon=driver_gps_a.lon + (t * gps_s1.lon))
 
-    distance_a = distance(driver_gps_a.get_coordinate_as_tuple(), gps_result.get_coordinate_as_tuple()).meters
-    distance_b = distance(driver_gps_b.get_coordinate_as_tuple(), gps_result.get_coordinate_as_tuple()).meters
+    distance_a = meters_distance_between(driver_gps_a, gps_result)
+    distance_b = meters_distance_between(driver_gps_b, gps_result)
 
     gps_result.timestamp = driver_gps_a.timestamp + abs(driver_gps_b.timestamp - driver_gps_a.timestamp) * \
                            distance_a / (distance_a + distance_b)

@@ -8,9 +8,10 @@
     "minutes": 20,
     "triggers": {
       "speed": false,
-      "one_beacon": false,
-      "two_beacon": false
-    }
+      "one_start_line_pass": true,
+      "two_start_line_passes": false
+    },
+    "speed_trigger": 50
   },
   "dev_settings": {
     "environment_settings": {

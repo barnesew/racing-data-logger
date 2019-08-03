@@ -13,6 +13,7 @@ class Logger:
         event_bus.on("can_data")(self.can_data_handler)
         event_bus.on("imu_data")(self.imu_data_handler)
         event_bus.on("gps_data")(self.gps_data_handler)
+        event_bus.on("lap_distance")(self.lap_distance_handler)
 
     def can_data_handler(self, can_data: CANData):
         self.last_can_data = can_data
@@ -23,3 +24,6 @@ class Logger:
     def gps_data_handler(self, gps_data: GPSData):
         if self.is_logging:
             print("Log: ", gps_data.timestamp, ", ", self.last_can_data, ", ", self.last_imu_data)
+
+    def lap_distance_handler(self, distance: float):
+        pass
