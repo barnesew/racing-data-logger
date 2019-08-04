@@ -1,4 +1,4 @@
-from src.RaceLogger import RaceLogger
+from race_logger.RaceLogger import RaceLogger
 
 
 def main():

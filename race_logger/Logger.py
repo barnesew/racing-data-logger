@@ -1,10 +1,10 @@
 from os import path, fsync
 
-from src.utils import SettingsUtils, TimeUtils
-from src.utils.BusUtils import event_bus
-from src.structures.CANData import CANData
-from src.structures.GPSData import GPSData
-from src.structures.IMUData import IMUData
+from race_logger.utils import TimeUtils, SettingsUtils
+from race_logger.utils.BusUtils import event_bus
+from race_logger.structures.CANData import CANData
+from race_logger.structures.GPSData import GPSData
+from race_logger.structures.IMUData import IMUData
 
 
 class Logger:

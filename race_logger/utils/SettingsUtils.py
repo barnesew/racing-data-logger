@@ -1,6 +1,6 @@
 from copy import copy
 
-from src.utils import FileUtils
+from race_logger.utils import FileUtils
 
 settings = FileUtils.load_json_from_file("./data/settings.json")
 

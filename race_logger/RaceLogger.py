@@ -2,15 +2,13 @@ from threading import Thread
 from os import path
 from time import sleep
 
-from src.utils import SettingsUtils, TimeUtils
-from src.utils import FileUtils
-from src.utils import GPSUtils
-from src.utils.BusUtils import event_bus
-from src.streams.CANStream import CANStream
-from src.streams.GPSStream import GPSStream
-from src.streams.IMUStream import IMUStream
-from src.structures.GPSData import GPSData
-from src.Logger import Logger
+from race_logger.utils import FileUtils, TimeUtils, SettingsUtils, GPSUtils
+from race_logger.utils.BusUtils import event_bus
+from race_logger import CANStream
+from race_logger import GPSStream
+from race_logger import IMUStream
+from race_logger.structures.GPSData import GPSData
+from race_logger import Logger
 
 
 class RaceLogger (Thread):
@@ -90,7 +88,7 @@ class RaceLogger (Thread):
 
     def _handle_triggered(self, gps_data: GPSData):
         event_bus.emit("laps_remaining", self.laps_remaining - self.start_line_crosses)
-        event_bus.emit("time_remaining", SettingsUtils.get("race_mode_settings", "minutes") * 60 -\
+        event_bus.emit("time_remaining", SettingsUtils.get("race_mode_settings", "minutes") * 60 - \
                        (TimeUtils.get_precise_timestamp() - self.time_triggered))
         if SettingsUtils.get("race_mode_settings", "countdown_mode") == "laps" and\
                 self.laps_remaining - self.start_line_crosses <= 0:

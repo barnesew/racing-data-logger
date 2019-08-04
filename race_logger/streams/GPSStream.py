@@ -1,8 +1,8 @@
 from threading import Thread
 import time
 
-from src.utils.BusUtils import event_bus
-from src.structures.GPSData import GPSData
+from race_logger.utils.BusUtils import event_bus
+from race_logger.structures.GPSData import GPSData
 
 
 class GPSStream (Thread):

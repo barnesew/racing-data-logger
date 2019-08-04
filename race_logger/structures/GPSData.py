@@ -1,4 +1,4 @@
-from src.utils import TimeUtils
+from race_logger.utils import TimeUtils
 
 
 class GPSData:

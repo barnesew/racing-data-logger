@@ -1,6 +1,6 @@
 from geopy.distance import distance
 
-from src.structures.GPSData import GPSData
+from race_logger.structures.GPSData import GPSData
 
 
 def meters_distance_between(gps_a: GPSData, gps_b: GPSData) -> float:
