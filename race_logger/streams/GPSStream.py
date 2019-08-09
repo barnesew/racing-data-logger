@@ -1,23 +1,24 @@
-from threading import Thread
-import time
+import asyncio
+import gps
 
-from race_logger.utils.BusUtils import event_bus
+from race_logger.utils.SocketUtils import sio
+from race_logger.utils.SocketUtils import event_bus
 from race_logger.structures.GPSData import GPSData
 
+_gpsd = gps.gps(mode=gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
 
-class GPSStream (Thread):
 
-    def __init__(self):
-        Thread.__init__(self)
-
-    def run(self):
-        # While loop pushing GPS data
-        while True:
-            event_bus.emit("gps_data", GPSData(lat=39.135338, lon=-84.520020))
-            time.sleep(0.9)
-            event_bus.emit("gps_data", GPSData(lat=39.135366, lon=-84.510619))
-            time.sleep(0.9)
-            event_bus.emit("gps_data", GPSData(lat=39.128228, lon=-84.511034))
-            time.sleep(0.9)
-            event_bus.emit("gps_data", GPSData(lat=39.128633, lon=-84.520651))
-            time.sleep(0.9)
+async def report_gps_data():
+    while True:
+        gps_raw = _gpsd.next()
+        if gps_raw["class"] == "TPV":
+            gps_data = GPSData(
+                lat=getattr(gps_raw, "lat", None),
+                lon=getattr(gps_raw, "lon", None),
+                alt=getattr(gps_raw, "alt", None),
+                speed=getattr(gps_raw, "speed", None),
+                climb=getattr(gps_raw, "climb", None),
+                heading=getattr(gps_raw, "track", None)
+            )
+            await sio.emit("gps_data", gps_data.__dict__)
+            await asyncio.sleep(0.5)
