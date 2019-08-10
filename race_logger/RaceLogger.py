@@ -4,6 +4,7 @@ from threading import Thread
 from race_logger.Race import Race
 from race_logger.streams.CANStreamExample import report_can_data
 from race_logger.streams.GPSStreamExample import report_gps_data
+from race_logger.streams.GPSStream import report_gps_data
 from race_logger.streams.IMUStreamExample import report_imu_data
 
 
