@@ -14,7 +14,6 @@ class Logger:
     def __init__(self):
 
         self.is_logging = True
-        self.is_logging = False
         self.last_can_data = CANData()
         self.last_gps_data = GPSData()
         self.last_imu_data = IMUData()
