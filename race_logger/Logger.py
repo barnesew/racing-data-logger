@@ -1,4 +1,6 @@
 from os import path, fsync
+import logging
+from pathlib import Path
 
 from race_logger.utils import TimeUtils, SettingsUtils
 from race_logger.utils.SocketUtils import event_bus
@@ -20,12 +22,27 @@ class Logger:
         output_file_name: str = SettingsUtils.get("event_name") + "_" + SettingsUtils.get("session_name") + \
                                 "_" + TimeUtils.get_log_name_timestamp() + ".csv"
         output_file_name = output_file_name.lower().replace(" ", "_")
-        self.output_file = open(path.join(
+        filename = Path(path.join(
             SettingsUtils.get("dev_settings", "environment_settings", "output_folder"),
             output_file_name
-        ), "w+")
-        self.output_file.write(GPSData.get_csv_header() + ", " + CANData.get_csv_header() +
+        ))
+        filename.touch(exist_ok=True)
+        try:
+            self.output_file = open(path.join(
+                SettingsUtils.get("dev_settings", "environment_settings", "output_folder"),
+                output_file_name
+            ), "w+")
+        except Exception as e:
+            logging.error("There was an error while attempting to open the racing log file.")
+            logging.error(e)
+            return
+        try:
+            self.output_file.write(GPSData.get_csv_header() + ", " + CANData.get_csv_header() +
                                ", " + IMUData.get_csv_header() + ", Current Lap Distance\n")
+        except Exception as e:
+            logging.error("There was an error while attempting to write to the racing log file.")
+            logging.error(e)
+            return
 
         # Bind handler functions to event bus messages.
         event_bus.on("can_data", self.can_data_handler)
