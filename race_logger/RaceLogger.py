@@ -17,7 +17,7 @@ class RaceLogger (Thread):
 
         self.event_loop = asyncio.get_event_loop()
         self.event_loop.create_task(report_can_data())
-        self.event_loop.create_task(report_gps_data())
+        self.event_loop.run_in_executor(None, report_gps_data)
         self.event_loop.create_task(report_imu_data())
 
     def run(self) -> None:
