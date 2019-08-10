@@ -1,7 +1,5 @@
-import asyncio
 import gps
 
-from race_logger.utils.SocketUtils import sio
 from race_logger.utils.SocketUtils import event_bus
 from race_logger.structures.GPSData import GPSData
 
@@ -20,5 +18,4 @@ async def report_gps_data():
                 climb=getattr(gps_raw, "climb", None),
                 heading=getattr(gps_raw, "track", None)
             )
-            await sio.emit("gps_data", gps_data.__dict__)
-            await asyncio.sleep(0.5)
+            await event_bus.emitAsync("gps_data", gps_data.__dict__)
