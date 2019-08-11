@@ -1,12 +1,10 @@
-from time import sleep
-from race_logger.RaceLogger import RaceLogger
+from race_logger import RaceLogger
+from race_logger.utils import LoggingUtils
 
 
 def main():
-    race_logger = RaceLogger()
-    race_logger.start()
-    while True:
-        sleep(5)
+    LoggingUtils.configure_logging()
+    RaceLogger.start()
 
 
 if __name__ == "__main__":
