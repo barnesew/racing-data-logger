@@ -53,6 +53,8 @@ class Race:
                 self.current_lap_distance = GPSUtils.meters_distance_between(
                     cross_gps, self.current_lap_gps_points[0]
                 )
+        else:
+            await event_bus.emitAsync("lap_distance", 0)
         if not self.is_triggered:
             self._handle_not_triggered(gps_data)
         else:

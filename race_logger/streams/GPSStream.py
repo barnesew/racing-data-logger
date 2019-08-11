@@ -8,6 +8,7 @@ _gpsd = gps.gps(mode=gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
 
 
 async def report_gps_data():
+    last_gps = GPSData(lat=0, lon=0)
     while True:
         loop = asyncio.get_event_loop()
         gps_raw = await loop.run_in_executor(None, _gpsd.next)
@@ -20,4 +21,7 @@ async def report_gps_data():
                 climb=getattr(gps_raw, "climb", None),
                 heading=getattr(gps_raw, "track", None)
             )
+            if last_gps.lat == gps_data.lat and last_gps.lon == gps_data.lon:
+                await asyncio.sleep(0.04)
+                continue
             await event_bus.emitAsync("gps_data", gps_data.__dict__)
