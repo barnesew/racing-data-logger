@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
+import VueSocketIO from 'vue-socket.io'
 
 import App from './App.vue'
 import router from './router'
@@ -11,6 +12,9 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.config.productionTip = false
 
 Vue.use(BootstrapVue)
+Vue.use(new VueSocketIO({
+  connection: 'http://localhost:5000'
+}))
 
 new Vue({
   router,
