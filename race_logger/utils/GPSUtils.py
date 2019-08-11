@@ -23,6 +23,9 @@ def did_driver_cross_start_line(driver_gps_a: GPSData, driver_gps_b: GPSData,
     filled if there was an intersection.
     """
 
+    if driver_gps_a.lat == driver_gps_b.lat and driver_gps_a.lon == driver_gps_b.lon:
+        return False, GPSData()
+
     gps_s1 = GPSData(lat=driver_gps_b.lat - driver_gps_a.lat, lon=driver_gps_b.lon - driver_gps_a.lon)
     gps_s2 = GPSData(lat=start_line_b.lat - start_line_a.lat, lon=start_line_b.lon - start_line_a.lon)
 
