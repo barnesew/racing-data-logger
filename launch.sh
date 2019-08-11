@@ -1,2 +1,2 @@
 #!/bin/sh
-python3.7 ./launch.py
+nohup python3.7 ./launch.py &
