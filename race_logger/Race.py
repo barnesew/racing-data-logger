@@ -92,5 +92,5 @@ class Race:
         self.is_triggered = True
 
     def _trigger_stop(self):
-        self.logger.is_logging = False
+        # self.logger.is_logging = False
         event_bus.off("gps_data", self._gps_data_handler)
