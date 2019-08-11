@@ -26,6 +26,11 @@ def did_driver_cross_start_line(driver_gps_a: GPSData, driver_gps_b: GPSData,
     gps_s1 = GPSData(lat=driver_gps_b.lat - driver_gps_a.lat, lon=driver_gps_b.lon - driver_gps_a.lon)
     gps_s2 = GPSData(lat=start_line_b.lat - start_line_a.lat, lon=start_line_b.lon - start_line_a.lon)
 
+    print(driver_gps_a)
+    print(driver_gps_b)
+    print(start_line_a)
+    print(start_line_b)
+
     s = (-gps_s1.lon * (driver_gps_a.lat - start_line_a.lat) + gps_s1.lat * (driver_gps_a.lon - start_line_a.lon)) / \
         (-gps_s2.lat * gps_s1.lon + gps_s1.lat * gps_s2.lon)
     t = (gps_s2.lat * (driver_gps_a.lon - start_line_a.lon) - gps_s2.lon * (driver_gps_a.lat - start_line_a.lat)) / \
