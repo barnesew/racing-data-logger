@@ -24,4 +24,4 @@ async def report_gps_data():
             if last_gps.lat == gps_data.lat and last_gps.lon == gps_data.lon:
                 await asyncio.sleep(0.04)
                 continue
-            await event_bus.emitAsync("gps_data", gps_data.__dict__)
+            await event_bus.emitAsync("gps_data", gps_data)
