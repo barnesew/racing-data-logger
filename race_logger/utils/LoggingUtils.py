@@ -1,32 +1,24 @@
 import sys
 import logging
-from aiologger import Logger
-from aiologger.handlers.files import AsyncFileHandler
-from aiologger.handlers.streams import AsyncStreamHandler
-import asyncio
-
-from aiologger.handlers.files import AsyncFileHandler
 
 
-async def configure_logging():
+def configure_logging():
 
-    loop = asyncio.get_event_loop()
-    logger = Logger(loop=loop, level=logging.DEBUG)
+    stdout_handler = logging.StreamHandler(sys.stdout)
+    stdout_handler.setLevel(logging.DEBUG)
+    stdout_formatter = logging.Formatter("%(levelname)s - %(message)s")
+    stdout_handler.setFormatter(stdout_formatter)
 
-    file_handler = AsyncFileHandler(
+    file_handler = logging.FileHandler(
         filename="./debug.log",
-        mode="w+",
-        loop=loop
-        #"%(levelname)s - %(asctime)s - %(message)s"
+        mode="w+"
     )
-    logger.add_handler(file_handler)
+    file_handler.setLevel(logging.DEBUG)
+    file_formatter = logging.Formatter("%(levelname)s - %(asctime)s - %(message)s")
+    file_handler.setFormatter(file_formatter)
 
-    stream_handler = AsyncStreamHandler(
-        stream=sys.stdout,
-        level=logging.INFO,
-        formatter=logging.Formatter("%(levelname)s - %(message)s"),
-        loop=loop
-    )
-    logger.add_handler(stream_handler)
+    logging.getLogger().setLevel(logging.DEBUG)
+    logging.getLogger().addHandler(stdout_handler)
+    logging.getLogger().addHandler(file_handler)
 
-    logging.debug("Debug logger configured.")
+    logging.info("Debug logger configured.")
