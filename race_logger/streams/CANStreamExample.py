@@ -2,11 +2,10 @@ import asyncio
 from random import random
 import logging
 
-from race_logger.utils.SocketUtils import event_bus
 from race_logger.structures.CANData import CANData
 
 
-async def report_can_data():
+async def report_can_data(event_bus):
     logging.debug("Starting to emit CAN example data.")
     while True:
         await event_bus.emitAsync("can_data", CANData(

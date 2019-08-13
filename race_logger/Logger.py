@@ -1,6 +1,8 @@
 from os import path, fsync
 import logging
 from pathlib import Path
+import asyncio
+import aiofiles
 
 from race_logger.utils import TimeUtils, SettingsUtils
 from race_logger.utils.SocketUtils import event_bus
@@ -28,7 +30,7 @@ class Logger:
         ))
         filename.touch(exist_ok=True)
         try:
-            self.output_file = open(path.join(
+            self.output_file = aiofiles.open(path.join(
                 SettingsUtils.get("dev_settings", "environment_settings", "output_folder"),
                 output_file_name
             ), "w+")
@@ -38,7 +40,7 @@ class Logger:
             return
         try:
             self.output_file.write(GPSData.get_csv_header() + ", " + CANData.get_csv_header() +
-                               ", " + IMUData.get_csv_header() + ", Current Lap Distance\n")
+                                   ", " + IMUData.get_csv_header() + ", Current Lap Distance\n")
         except Exception as e:
             logging.error("There was an error while attempting to write to the racing log file.")
             logging.error(e)
@@ -62,19 +64,24 @@ class Logger:
     async def lap_distance_handler(self, lap_distance: float):
         if self.is_logging:
             logging.debug("Writing data entry to the racing log file.")
-            try:
-                self.output_file.write(
-                    self.last_gps_data.get_gps_as_csv() + ", " + self.last_can_data.get_can_as_csv() +
-                    ", " + self.last_imu_data.get_imu_as_csv() + ", " + str(lap_distance) + "\n"
-                )
-            except Exception as e:
-                logging.error("There was an error while attempting to write to the racing log file.")
-                logging.error(e)
-                return
-            try:
-                self.output_file.flush()
-                fsync(self.output_file.fileno())
-            except Exception as e:
-                logging.error("There was an error while attempting to sync file with the file system.")
-                logging.error(e)
-                return
+            await asyncio.get_event_loop().run_in_executor(None, self.write_to_file,
+                 self.last_gps_data.get_gps_as_csv() + ", " + self.last_can_data.get_can_as_csv() +
+                 ", " + self.last_imu_data.get_imu_as_csv() + ", " + str(lap_distance) + "\n"
+            )
+
+    async def write_to_file(self, line):
+        try:
+            await self.output_file.write(line)
+        except Exception as e:
+            logging.error("There was an error while attempting to write to the racing log file.")
+            logging.error(e)
+            return
+        """
+        try:
+            self.output_file.flush()
+            fsync(self.output_file.fileno())
+        except Exception as e:
+            logging.error("There was an error while attempting to sync file with the file system.")
+            logging.error(e)
+            return
+        """
