@@ -1,7 +1,7 @@
 from os import path
 import logging
 
-from race_logger.Logger import Logger
+from race_logger.managers.Logger import Logger
 from race_logger.structures.GPSData import GPSData
 from race_logger.utils import FileUtils, SettingsUtils, GPSUtils, TimeUtils
 from race_logger.utils.SocketUtils import event_bus

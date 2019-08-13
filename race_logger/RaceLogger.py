@@ -2,18 +2,19 @@ from aiohttp import web
 import socketio
 from awebus import Bus
 
-# from race_logger.Race import Race
-# from race_logger.utils import LoggingUtils
+from race_logger.utils import LoggingUtils
+
 from race_logger.streams.CANStreamExample import report_can_data
 from race_logger.streams.GPSStreamExample import report_gps_data
 from race_logger.streams.IMUStreamExample import report_imu_data
-
 from race_logger.structures.CANData import CANData
 from race_logger.structures.GPSData import GPSData
 from race_logger.structures.IMUData import IMUData
 
 
 def start():
+
+    LoggingUtils.configure_logging()
 
     sio = socketio.AsyncServer(async_mode="aiohttp")
     app = web.Application()
