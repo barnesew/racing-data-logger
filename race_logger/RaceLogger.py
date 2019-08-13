@@ -1,20 +1,26 @@
 from aiohttp import web
 import socketio
 from awebus import Bus
+import logging
 
 from race_logger.utils import LoggingUtils
+
+from race_logger.structures.CANData import CANData
+from race_logger.structures.GPSData import GPSData
+from race_logger.structures.IMUData import IMUData
 
 from race_logger.streams.CANStreamExample import report_can_data
 from race_logger.streams.GPSStreamExample import report_gps_data
 from race_logger.streams.IMUStreamExample import report_imu_data
-from race_logger.structures.CANData import CANData
-from race_logger.structures.GPSData import GPSData
-from race_logger.structures.IMUData import IMUData
+
+from race_logger.managers.RaceManager import RaceManager
+from race_logger.managers.LoggingManager import LoggingManager
 
 
 def start():
 
     LoggingUtils.configure_logging()
+    logging.info("Starting RaceLogger.")
 
     sio = socketio.AsyncServer(async_mode="aiohttp")
     app = web.Application()
@@ -34,9 +40,8 @@ def start():
         await sio.emit("imu_data", imu_data.__dict__)
     event_bus.on("imu_data", handle_imu_data)
 
-    # LoggingUtils.configure_logging()
-    # logging.info("Starting RaceLogger.")
-    # Race()
+    race_manager = RaceManager(event_bus)
+    logging_manager = LoggingManager(event_bus)
 
     sio.start_background_task(report_can_data, event_bus)
     sio.start_background_task(report_gps_data, event_bus)

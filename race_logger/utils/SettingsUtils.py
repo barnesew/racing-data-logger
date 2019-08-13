@@ -3,11 +3,13 @@ import logging
 
 from race_logger.utils import FileUtils
 
-settings = FileUtils.load_json_from_file("./data/settings.json")
+settings = None
 
 
 def get(*argv):
     global settings
+    if settings is None:
+        settings = FileUtils.load_json_from_file("./data/settings.json")
     temp_settings = copy(settings)
     for setting in argv:
         if setting in temp_settings:
