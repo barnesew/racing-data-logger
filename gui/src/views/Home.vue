@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Home</h1>
-    <div v-for="(gps, index) in gpsData" :key="index">
+    <div v-for="(gps, index) in gps_data" :key="index">
       <h2>{{ gps }}</h2>
     </div>
   </div>
@@ -12,17 +12,18 @@
 
 export default {
   name: 'home',
-  computed: {
-    gpsData () {
-      return this.$store.state.gpsData
+  data () {
+    return {
+      gps_data: []
     }
   },
   sockets: {
     connect: function () {
       console.log('Socket Connected.')
     },
-    gps: function (test) {
-      console.log('Data!')
+    gps_data: function (test) {
+      console.log(test)
+      this.gps_data.push(test)
     }
   }
 }

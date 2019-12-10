@@ -22,7 +22,7 @@ def start():
     LoggingUtils.configure_logging()
     logging.info("Starting RaceLogger.")
 
-    sio = socketio.AsyncServer(async_mode="aiohttp")
+    sio = socketio.AsyncServer(async_mode="aiohttp", cors_allowed_origins="*")
     app = web.Application()
     sio.attach(app)
 
