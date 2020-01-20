@@ -1,8 +1,10 @@
-from race_logger import RaceLogger
+import asyncio
+
+from race_logger import RaceLogger2
 
 
 def main():
-    RaceLogger.start()
+    asyncio.run(RaceLogger2.run())
 
 
 if __name__ == "__main__":
