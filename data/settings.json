@@ -4,8 +4,8 @@
   "session_name": "Q1",
   "race_mode_settings": {
     "countdown_mode": "laps",
-    "laps": 100,
-    "minutes": 20,
+    "laps": 10,
+    "minutes": 1,
     "triggers": {
       "speed": false,
       "one_start_line_pass": true,

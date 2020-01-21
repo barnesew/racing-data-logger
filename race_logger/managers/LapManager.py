@@ -6,7 +6,7 @@ from race_logger.utils import GPSUtils
 
 _event_bus = None
 
-_current_lap = 0
+_current_lap = -1
 _current_lap_gps_points = []
 _current_lap_distance = 0
 
@@ -19,7 +19,8 @@ async def init(event_bus):
 
     _event_bus = event_bus
     _event_bus.on("gps_data", _gps_handler)
-    _event_bus.on("trigger_tripped", _trigger_handler)
+    _event_bus.on("trigger_tripped", _trigger_tripped_handler)
+    _event_bus.on("trigger_reset", _trigger_reset_handler)
     _event_bus.on("get_current_lap", _get_current_lap)
 
 
@@ -53,11 +54,19 @@ async def _gps_handler(gps_data: GPSData):
     await _event_bus.emitAsync("lap_distance", _current_lap_distance)
 
 
-async def _trigger_handler():
+async def _trigger_tripped_handler():
     global _current_lap
     logging.debug("Trigger detected. Resetting lap count to zero.")
     _current_lap = 0
 
 
+async def _trigger_reset_handler():
+    global _current_lap
+    logging.debug("Trigger was reset. Putting lap count in initial state.")
+    _current_lap = -1
+
+
 async def _get_current_lap():
+    if _current_lap < 0:
+        return 0
     return _current_lap

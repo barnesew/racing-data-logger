@@ -16,6 +16,8 @@ async def run():
 
     logging.info("Welcome to the Racing Data Logger!")
 
+    # TODO: Add the socket.io publisher back in so data is available for the GUI.
+
     # sio = socketio.AsyncServer(async_mode="aiohttp", cors_allowed_origins="*")
     # app = web.Application()
     # sio.attach(app)
@@ -28,7 +30,7 @@ async def run():
     await LoggingManager.init(event_bus)
     await TrackManager.init(event_bus)
     await LapManager.init(event_bus)
-    # await TriggerManager.init(event_bus)
+    await TriggerManager.init(event_bus)
     # DataPublisher(event_bus, sio)
 
     logging.debug("Starting the data streams.")
