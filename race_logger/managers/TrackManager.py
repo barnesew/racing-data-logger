@@ -38,7 +38,7 @@ class TrackManager:
         for file in listdir(track_directory):
             if file.endswith(".json"):
                 try:
-                    tracks[file.split(".")[:-1]] = FileUtils.load_json_from_file(path.join(
+                    tracks[path.splitext(file)[0]] = FileUtils.load_json_from_file(path.join(
                         track_directory, file
                     ))
                 except Exception as e:
