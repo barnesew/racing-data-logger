@@ -22,7 +22,7 @@ _imu_file = None
 _distance_file = None
 
 
-def init(event_bus):
+async def init(event_bus):
     global _event_bus
     _event_bus = event_bus
     _open_files()

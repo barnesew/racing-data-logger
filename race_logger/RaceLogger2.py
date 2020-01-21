@@ -8,9 +8,7 @@ from race_logger.streams.GPSStreamExample import report_gps_data
 from race_logger.streams.IMUStreamExample import report_imu_data
 from race_logger.publishers.DataPublisher import DataPublisher
 from race_logger.managers.RaceManager import RaceManager
-from race_logger.managers import LoggingManager
-from race_logger.managers.TrackManager import TrackManager
-from race_logger.managers.LapManager import LapManager
+from race_logger.managers import LoggingManager, TrackManager, LapManager
 from race_logger.managers.TriggerManager import TriggerManager
 
 
@@ -25,13 +23,12 @@ async def run():
     event_bus = Bus()
 
     # race_manager = RaceManager(event_bus)
-    # logging_manager = LoggingManager(event_bus)
 
     # _start_web_app(app)
 
-    LoggingManager.init(event_bus)
-    # TrackManager(event_bus)
-    # LapManager(event_bus)
+    await LoggingManager.init(event_bus)
+    await TrackManager.init(event_bus)
+    await LapManager.init(event_bus)
     # TriggerManager(event_bus)
     # DataPublisher(event_bus, sio)
 
