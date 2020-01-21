@@ -23,7 +23,11 @@ _distance_file = None
 
 
 async def init(event_bus):
+
     global _event_bus
+
+    logging.debug("Initializing the logging manager.")
+
     _event_bus = event_bus
     _open_files()
     _event_bus.on("can_data", _can_handler)
@@ -52,10 +56,12 @@ def _open_files():
 
     global _can_file, _gps_file, _imu_file, _distance_file
 
+    logging.debug("Initializing the racing log files.")
+
     logging.debug("Creating a directory for the racing log files: " + _output_folder)
     makedirs(_output_folder)
 
-    logging.debug("Creating the racing log files.")
+    logging.debug("Creating the racing log CSV files.")
     _can_file = FileUtils.open_file(path.join(_output_folder, "can_data.csv"))
     _gps_file = FileUtils.open_file(path.join(_output_folder, "gps_data.csv"))
     _imu_file = FileUtils.open_file(path.join(_output_folder, "imu_data.csv"))

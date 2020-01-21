@@ -1,8 +1,6 @@
 import logging
 from os import listdir, path
 
-from awebus import Bus
-
 from race_logger.structures.GPSData import GPSData
 from race_logger.utils import FileUtils, SettingsUtils
 
@@ -17,6 +15,8 @@ async def init(event_bus):
 
     global _event_bus, _tracks, _current_track_name, _current_track
 
+    logging.debug("Initializing the track manager.")
+
     _event_bus = event_bus
     _tracks = _init_load_tracks()
 
@@ -24,6 +24,7 @@ async def init(event_bus):
         _current_track_name = next(iter(_tracks))
         _current_track = _tracks[_current_track_name]
 
+    logging.debug("Setting the initial track file based on the settings.")
     await _set_track(SettingsUtils.get("current_track_file"))
 
     _event_bus.on("set_track", _set_track)
@@ -37,6 +38,8 @@ def _init_load_tracks():
     tracks = {}
     track_directory = SettingsUtils.get("dev_settings", "environment_settings", "tracks_folder")
 
+    logging.debug("Using the following tracks directory: " + track_directory)
+
     if not path.isdir(track_directory):
         logging.error("The track directory specified is not a valid directory.")
         return tracks
@@ -48,7 +51,7 @@ def _init_load_tracks():
                     track_directory, file
                 ))
             except Exception as e:
-                logging.error("There was an error parsing the following track file: " + file)
+                logging.error("There was an error parsing the specified track file.")
                 logging.error(e)
 
     return tracks
@@ -56,9 +59,12 @@ def _init_load_tracks():
 
 async def _set_track(track_name):
     global _current_track_name, _current_track
+    logging.debug("Switching the current track to: " + track_name)
     if track_name in _tracks.keys():
         _current_track_name = track_name
         _current_track = _tracks[track_name]
+    else:
+        logging.warning("The specified track name does not exist. Keeping original.")
 
 
 async def _get_current_track():

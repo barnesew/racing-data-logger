@@ -15,6 +15,8 @@ async def init(event_bus):
 
     global _event_bus
 
+    logging.debug("Initializing the lap manager.")
+
     _event_bus = event_bus
     _event_bus.on("gps_data", _gps_handler)
     _event_bus.on("trigger_tripped", _trigger_handler)
@@ -40,7 +42,7 @@ async def _gps_handler(gps_data: GPSData):
         )
 
         if was_start_line_crossed:
-            logging.debug("Registered the vehicle crossing the start line.")
+            logging.debug("Registered that the vehicle crossed the start line.")
             _current_lap += 1
             await _event_bus.emitAsync("crossed_start_line")
             current_lap_gps_points = [_current_lap_gps_points[-1]]
@@ -53,6 +55,7 @@ async def _gps_handler(gps_data: GPSData):
 
 async def _trigger_handler():
     global _current_lap
+    logging.debug("Trigger detected. Resetting lap count to zero.")
     _current_lap = 0
 
 
