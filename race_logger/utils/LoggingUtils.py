@@ -4,6 +4,8 @@ import logging
 
 def configure_logging():
 
+    logging.getLogger().handlers = []
+
     stdout_handler = logging.StreamHandler(sys.stdout)
     stdout_handler.setLevel(logging.DEBUG)
     stdout_formatter = logging.Formatter("%(levelname)s - %(message)s")
