@@ -1,13 +1,14 @@
 import gps
 import asyncio
 
-from race_logger.utils.SocketUtils import event_bus
+from awebus import Bus
+
 from race_logger.structures.GPSData import GPSData
 
 _gpsd = gps.gps(mode=gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
 
 
-async def report_gps_data():
+async def report_gps_data(event_bus):
     last_gps = GPSData(lat=0, lon=0)
     while True:
         loop = asyncio.get_event_loop()
