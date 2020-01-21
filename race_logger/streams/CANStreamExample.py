@@ -11,7 +11,7 @@ from race_logger.utils import TimeUtils
 async def report_can_data(event_bus):
     logging.debug("Starting to emit CAN example data.")
     while True:
-        await event_bus.emitAsync("can_data", event_bus, CANData(
+        await event_bus.emitAsync("can_data", CANData(
                 timestamp=TimeUtils.get_precise_timestamp(),
                 engine_speed=random(),
                 throttle_position=random(),
