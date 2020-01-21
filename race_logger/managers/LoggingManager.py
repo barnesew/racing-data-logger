@@ -1,78 +1,68 @@
-from os import path, fsync
+from os import path, makedirs
 import logging
-import asyncio
 
-from race_logger.utils import TimeUtils, SettingsUtils
+from race_logger.utils import TimeUtils, SettingsUtils, FileUtils
 from race_logger.structures.CANData import CANData
 from race_logger.structures.GPSData import GPSData
 from race_logger.structures.IMUData import IMUData
 
 
-class LoggingManager:
+_event_bus = None
 
-    def __init__(self, event_bus):
+_output_folder = path.join(
+        SettingsUtils.get("dev_settings", "environment_settings", "output_folder"),
+        SettingsUtils.get("event_name") + "_" + SettingsUtils.get("session_name") +
+        "_" + TimeUtils.get_log_name_timestamp()
+    )
+_output_folder = _output_folder.lower().replace(" ", "_")
 
-        self.is_logging = True
-        self.last_can_data = CANData()
-        self.last_gps_data = GPSData()
-        self.last_imu_data = IMUData()
+_can_file = None
+_gps_file = None
+_imu_file = None
+_distance_file = None
 
-        logging.debug("Opening and writing headers to the racing log file.")
-        output_file_name: str = SettingsUtils.get("event_name") + "_" + SettingsUtils.get("session_name") + \
-                                "_" + TimeUtils.get_log_name_timestamp() + ".csv"
-        output_file_name = output_file_name.lower().replace(" ", "_")
-        try:
-            self.output_file = open(path.join(
-                SettingsUtils.get("dev_settings", "environment_settings", "output_folder"),
-                output_file_name
-            ), "w+")
-        except Exception as e:
-            logging.error("There was an error while attempting to open the racing log file.")
-            logging.error(e)
-            return
-        try:
-            self.output_file.write(GPSData.get_csv_header() + ", " + CANData.get_csv_header() +
-                                   ", " + IMUData.get_csv_header() + ", Current Lap Distance\n")
-        except Exception as e:
-            logging.error("There was an error while attempting to write to the racing log file.")
-            logging.error(e)
-            return
 
-        logging.debug("Binding CAN, IMU, GPS, and lap distance handlers to the event bus.")
-        event_bus.on("can_data", self.can_data_handler)
-        event_bus.on("imu_data", self.imu_data_handler)
-        event_bus.on("gps_data", self.gps_data_handler)
-        event_bus.on("lap_distance", self.lap_distance_handler)
+def init(event_bus):
+    global _event_bus
+    _event_bus = event_bus
+    _open_files()
+    _event_bus.on("can_data", _can_handler)
+    _event_bus.on("gps_data", _gps_handler)
+    _event_bus.on("imu_data", _imu_handler)
+    _event_bus.on("lap_distance", _lap_distance_handler)
 
-    async def can_data_handler(self, can_data: CANData):
-        self.last_can_data = can_data
 
-    async def gps_data_handler(self, gps_data: GPSData):
-        self.last_gps_data = gps_data
+async def _can_handler(can_data: CANData):
+    FileUtils.write_to_file(_can_file, can_data.get_can_as_csv() + "\n")
 
-    async def imu_data_handler(self, imu_data: IMUData):
-        self.last_imu_data = imu_data
 
-    async def lap_distance_handler(self, lap_distance: float):
-        if self.is_logging:
-            logging.debug("Writing data entry to the racing log file.")
-            await asyncio.get_event_loop().run_in_executor(
-                None, self.write_to_file,
-                self.last_gps_data.get_gps_as_csv() + ", " + self.last_can_data.get_can_as_csv() +
-                ", " + self.last_imu_data.get_imu_as_csv() + ", " + str(lap_distance) + "\n"
-            )
+async def _gps_handler(gps_data: GPSData):
+    FileUtils.write_to_file(_gps_file, gps_data.get_gps_as_csv() + "\n")
 
-    def write_to_file(self, line):
-        try:
-            self.output_file.write(line)
-        except Exception as e:
-            logging.error("There was an error while attempting to write to the racing log file.")
-            logging.error(e)
-            return
-        try:
-            self.output_file.flush()
-            fsync(self.output_file.fileno())
-        except Exception as e:
-            logging.error("There was an error while attempting to sync file with the file system.")
-            logging.error(e)
-            return
+
+async def _imu_handler(imu_data: IMUData):
+    FileUtils.write_to_file(_imu_file, imu_data.get_imu_as_csv() + "\n")
+
+
+async def _lap_distance_handler(lap_distance: float):
+    FileUtils.write_to_file(_distance_file, "{}, {}\n".format(TimeUtils.get_precise_timestamp(), lap_distance))
+
+
+def _open_files():
+
+    global _can_file, _gps_file, _imu_file, _distance_file
+
+    logging.debug("Creating a directory for the racing log files: " + _output_folder)
+    makedirs(_output_folder)
+
+    logging.debug("Creating the racing log files.")
+    _can_file = FileUtils.open_file(path.join(_output_folder, "can_data.csv"))
+    _gps_file = FileUtils.open_file(path.join(_output_folder, "gps_data.csv"))
+    _imu_file = FileUtils.open_file(path.join(_output_folder, "imu_data.csv"))
+    _distance_file = FileUtils.open_file(path.join(_output_folder, "distance_data.csv"))
+
+    logging.debug("Writing CSV headers to the racing log files.")
+    FileUtils.write_to_file(_can_file, CANData.get_csv_header() + "\n")
+    FileUtils.write_to_file(_gps_file, GPSData.get_csv_header() + "\n")
+    FileUtils.write_to_file(_imu_file, IMUData.get_csv_header() + "\n")
+    FileUtils.write_to_file(_distance_file, "Timestamp, Lap Distance\n")
