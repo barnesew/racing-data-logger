@@ -1,3 +1,6 @@
+from race_logger.utils import TimeUtils
+
+
 class CANData:
 
     """
@@ -5,10 +8,15 @@ class CANData:
     MAP sensor (Manifold air pressure after throttle), battery voltage, fuel pressure, oil pressure
     """
 
-    def __init__(self, engine_speed: float = None, throttle_position: float = None, coolant_temp: float = None,
-                 oil_temp: float = None, intake_air_temp: float = None, map_sensor: float = None,
-                 battery_voltage: float = None, fuel_pressure: float = None, oil_pressure: float = None):
+    def __init__(self, timestamp: float = None, engine_speed: float = None, throttle_position: float = None,
+                 coolant_temp: float = None, oil_temp: float = None, intake_air_temp: float = None,
+                 map_sensor: float = None, battery_voltage: float = None, fuel_pressure: float = None,
+                 oil_pressure: float = None):
 
+        if timestamp is None:
+            timestamp = TimeUtils.get_precise_timestamp()
+
+        self.timestamp: float = timestamp
         self.engine_speed: float = engine_speed
         self.throttle_position: float = throttle_position
         self.coolant_temp: float = coolant_temp
@@ -21,11 +29,12 @@ class CANData:
 
     @staticmethod
     def get_csv_header():
-        return "Engine Speed, Throttle Position, Coolant Temp, Oil Temp, Intake Air Temp, " \
+        return "Timestamp, Engine Speed, Throttle Position, Coolant Temp, Oil Temp, Intake Air Temp, " \
                "MAP Sensor, Battery Voltage, Fuel Pressure, Oil Pressure"
 
     def get_can_as_csv(self):
-        return "{}, {}, {}, {}, {}, {}, {}, {}, {}".format(
+        return "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(
+            self.timestamp,
             self.engine_speed,
             self.throttle_position,
             self.coolant_temp,
