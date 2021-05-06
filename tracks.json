@@ -1,0 +1,16 @@
+{
+  "test_track": {
+    "name": "Test Track",
+    "start_line": {
+      "gps_a": [39.129061, -84.515716],
+      "gps_b": [39.127116, -84.515923]
+    }
+  },
+  "grattan_raceway": {
+    "name": "Grattan Raceway",
+    "start_line": {
+      "gps_a": [43.096003, -85.385271],
+      "gps_b": [43.095683, -85.385184]
+    }
+  }
+}

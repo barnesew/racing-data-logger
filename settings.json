@@ -1,5 +1,5 @@
 {
-  "current_track_file": "grattan_raceway.json",
+  "current_track": "test_track",
   "event_name": "SpooperDupper Race 2019",
   "session_name": "Q1",
   "race_mode_settings": {
@@ -14,9 +14,6 @@
     "speed_trigger": 50
   },
   "dev_settings": {
-    "environment_settings": {
-      "output_folder": "./data/output",
-      "tracks_folder": "./data/tracks"
-    }
+    "output_folder": "output/"
   }
 }
