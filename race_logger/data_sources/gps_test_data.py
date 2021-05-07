@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from awebus import Bus
 
@@ -13,6 +14,7 @@ _test_data = (
 
 
 async def gps_test_data(event_bus: Bus):
+    logging.info("Starting GPS test data source.")
     while True:
         for gps_data in _test_data:
             # timestamp, gps coordinate, speed, climb, heading

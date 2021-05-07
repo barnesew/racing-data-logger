@@ -1,3 +1,5 @@
+import logging
+
 from awebus import Bus
 
 from geopy.distance import distance
@@ -31,6 +33,7 @@ async def _handle_gps_data(timestamp, gps_coordinate, _speed, _climb, _heading):
         _start_line_gps_a, _start_line_gps_b
     )
     if did_cross:
+        logging.info("Start line was crossed.")
         _current_lap_distance += distance(_current_lap_gps_coordinates[-1], crossing_gps_coordinate).meters
         await _event_bus.emitAsync("lap_distance", crossing_timestamp, _current_lap_distance)
         await _event_bus.emitAsync("start_line_crossed", crossing_timestamp, crossing_gps_coordinate)
@@ -40,7 +43,10 @@ async def _handle_gps_data(timestamp, gps_coordinate, _speed, _climb, _heading):
     else:
         _current_lap_timestamps.append(timestamp)
         _current_lap_gps_coordinates.append(gps_coordinate)
-        _current_lap_distance += distance(_current_lap_gps_coordinates[-2], _current_lap_gps_coordinates[-1]).meters
+        _current_lap_distance += distance(
+            _current_lap_gps_coordinates[-2][:2],
+            _current_lap_gps_coordinates[-1][:2]
+        ).meters
     await _event_bus.emitAsync("lap_distance", timestamp, _current_lap_distance)
 
 
@@ -62,10 +68,13 @@ def _did_cross_start_line(
     gps_s1 = (driver_gps_b[0] - driver_gps_a[0], driver_gps_b[1] - driver_gps_a[1])
     gps_s2 = (start_line_gps_b[0] - start_line_gps_a[0], start_line_gps_b[1] - start_line_gps_a[1])
 
-    s = (-gps_s1[1] * (driver_gps_a[0] - start_line_gps_a[0]) + gps_s1[0] * (driver_gps_a[1] - start_line_gps_a[1])) / \
-        (-gps_s2[0] * gps_s1[1] + gps_s1[0] * gps_s2[1])
-    t = (gps_s2[0] * (driver_gps_a[1] - start_line_gps_a[1]) - gps_s2[1] * (driver_gps_a[0] - start_line_gps_a[0])) / \
-        (-gps_s2[0] * gps_s1[1] + gps_s1[0] * gps_s2[1])
+    try:
+        s = (-gps_s1[1] * (driver_gps_a[0] - start_line_gps_a[0]) + gps_s1[0] * (driver_gps_a[1] - start_line_gps_a[1])) / \
+            (-gps_s2[0] * gps_s1[1] + gps_s1[0] * gps_s2[1])
+        t = (gps_s2[0] * (driver_gps_a[1] - start_line_gps_a[1]) - gps_s2[1] * (driver_gps_a[0] - start_line_gps_a[0])) / \
+            (-gps_s2[0] * gps_s1[1] + gps_s1[0] * gps_s2[1])
+    except ZeroDivisionError:
+        return False, tuple(), 0.0
 
     if not (0 <= s <= 1 and 0 <= t <= 1):
         return False, tuple(), 0.0
