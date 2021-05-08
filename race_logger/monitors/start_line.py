@@ -33,7 +33,7 @@ async def _handle_gps_data(timestamp, gps_coordinate, _speed, _climb, _heading):
         _start_line_gps_a, _start_line_gps_b
     )
     if did_cross:
-        logging.info("Start line was crossed.")
+        logging.debug("Registered start line crossed.")
         _current_lap_distance += distance(_current_lap_gps_coordinates[-1], crossing_gps_coordinate).meters
         await _event_bus.emitAsync("lap_distance", crossing_timestamp, _current_lap_distance)
         await _event_bus.emitAsync("start_line_crossed", crossing_timestamp, crossing_gps_coordinate)
